@@ -14,12 +14,19 @@ namespace RUTAS_TEST2
     {
         WriteExcel writeExcel;
 
-        int index = 0;
-        private bool JacFinished;
+        int index;
+        string CurrentSelection;
+        bool FirstIndexZero;
+        bool hasNote;
+
+        private bool JacFinished = false;
+
+
         public List<string> Jac;
         public List<string> Kia;
 
         string ToPrintNOTE;
+        string ToPrintState;
 
         public string[] JacState;
         public string[] JacSaleAm;
@@ -57,29 +64,23 @@ namespace RUTAS_TEST2
             JKiaSaleAm = new string[Kia.Count];
 
 
-            Console.WriteLine(Jac);
+
+            index = 0;
+        
+            
         }
 
         private void Seleccion_Load(object sender, EventArgs e)
         {
-            GenerateBTN.Enabled = false;
-            GenerateBTN.Visible = false;
-            textBox1.Visible = false;
-            AcceptBTN.Visible = false;
-
-            textBox2.Visible = false;
-            Accept2BTN.Visible = false;
-
-            CarLBL.Text = "JAC";
-            DogLBL.Text = Jac[index];
-
-            
+            Initial();
         }
 
         private void SaleamBTN_Click(object sender, EventArgs e)
         {
             SaleamBTN.BackColor = Color.Yellow;
             SalepmBTN.BackColor = Color.White;
+
+            hasNote = true;
             ToPrintNOTE = "SALE A.M";
         }
 
@@ -87,6 +88,9 @@ namespace RUTAS_TEST2
         {
             SaleamBTN.BackColor = Color.White;
             SalepmBTN.BackColor = Color.Yellow;
+
+            hasNote = true;
+
             ToPrintNOTE = "SALE P.M";
         }
 
@@ -94,139 +98,97 @@ namespace RUTAS_TEST2
         private void button1_Click(object sender, EventArgs e) // NOTA DIFERENTE
         {
             textBox1.Visible = true;
-            AcceptBTN.Visible = true;
             textBox1.Focus();
-
-            XBTN.Enabled = false;
-            button2.Enabled = false;
-            NoBTN.Enabled = false;
-
-            SaleamBTN.Enabled = false;
-            SalepmBTN.Enabled = false;
-
-            EstadoDiferenteBTN.Enabled = false;
-
-
+            AcceptBTN.Visible = true;
         }
 
         private void AcceptBTN_Click(object sender, EventArgs e) // (NOTAS (SALE PM)
         {
-            // Variable  = textBox1.Text;
+
+            hasNote = true;
+            ToPrintNOTE = textBox1.Text.ToUpper();
+            Console.WriteLine("Se va a imprimir " + ToPrintNOTE);
+            printNote();
+
+            AcceptBTN.Visible = false;
 
             textBox1.Text = "";
             textBox1.Visible = false;
-            AcceptBTN.Visible = false;
-
-            XBTN.Enabled = true;
-            button2.Enabled = true;
-            NoBTN.Enabled = true;
-
-            SaleamBTN.Enabled = true;
-            SalepmBTN.Enabled = true;
-            EstadoDiferenteBTN.Enabled = true;
-            button1.Enabled = true;
-
-            if (!JacFinished)
-            {
-                ToPrintNOTE = (textBox2.Text).ToUpper();
-                JacSaleAm[index] = ToPrintNOTE;
-                textBox1.Text = "";
-                
-            }
-            else
-            {
-                ToPrintNOTE = (textBox2.Text).ToUpper();
-                JKiaSaleAm[index] = ToPrintNOTE;
-                textBox1.Text = "";
-
-            }
 
 
 
         }
         private void EstadoDiferenteBTN_Click(object sender, EventArgs e)
         {
-            XBTN.Enabled = false;
-            button2.Enabled = false;
-            NoBTN.Enabled = false;
-
-            SaleamBTN.Enabled = false;
-            SalepmBTN.Enabled = false;
-
             textBox2.Visible = true;
-            Accept2BTN.Visible = true;
             textBox2.Focus();
+            Accept2BTN.Visible = true;
 
-            button1.Enabled = false;
+            #region DESABILITAR BOTONES
+            XBTN.Enabled = false;
+            NoBTN.Enabled = false;
+            button2.Enabled = false;
+
+
+
+            #endregion
         }
 
 
         private void Accept2BTN_Click(object sender, EventArgs e) // Estado (X, G, NO)
         {
-            string ToPrintState;
-            ToPrintState = textBox2.Text.ToUpper(); 
 
+            ToPrintState = textBox2.Text.ToUpper();
+            Console.WriteLine("ToPrintState = " + ToPrintState);
+            if (!JacFinished)
+            {
+                JacState[index] = ToPrintState;
+            }
+            else
+            {
+                KiaState[index - Jac.Count] = ToPrintState;
+            }
+
+            textBox2.Text = "";
             textBox2.Visible = false;
             Accept2BTN.Visible = false;
 
             XBTN.Enabled = true;
-            button2.Enabled = true;
             NoBTN.Enabled = true;
+            button2.Enabled = true;
 
-            SaleamBTN.Enabled = true;
-            SalepmBTN.Enabled = true;
-            EstadoDiferenteBTN.Enabled = true;
-            button1.Enabled = true;
+            Next();
 
-            if (!JacFinished)
-            {
-                JacState[index] = ToPrintState;
-                JacSaleAm[index] = ToPrintNOTE;
-                textBox2.Text = "";
-                Next();
-                
-            }
-            else
-            {
-                KiaState[index] = ToPrintState;
-                JKiaSaleAm[index] = ToPrintNOTE;
-                textBox2.Text = "";
-                Next();
-            }
-            
         }
         private void NoBTN_Click(object sender, EventArgs e)
         {
             if (!JacFinished)
             {
                 JacState[index] = "NO";
-                JacSaleAm[index] =ToPrintNOTE;
-                Next();
             }
             else
             {
-                KiaState[index] = "NO";
-                JKiaSaleAm[index] =ToPrintNOTE;
-                Next();
+                KiaState[index - Jac.Count] = "NO";
             }
+
+            Next();
+
         }
 
 
-        private void button2_Click(object sender, EventArgs e) // GUARDERIA BTN
+        private void button2_Click(object sender, EventArgs e) // G BTN
         {
             if (!JacFinished)
             {
-                JacState[index] = "G"; 
-                JacSaleAm[index] = ToPrintNOTE;
-                Next();
+                JacState[index] = "G";
             }
             else
             {
-                KiaState[index] = "G";
-                JKiaSaleAm[index] = ToPrintNOTE;
-                Next();
+                KiaState[index - Jac.Count] = "G";
             }
 
+
+            Next();
         }
 
 
@@ -235,107 +197,173 @@ namespace RUTAS_TEST2
 
             if (!JacFinished)
             {
-                JacState[index] = "X"; 
-                JacSaleAm[index] = ToPrintNOTE;
-                Next();
+                JacState[index] = "X";
             }
             else
             {
-                KiaState[index] = "X";
-                JKiaSaleAm[index] = ToPrintNOTE;
-                Next();
+                KiaState[index - Jac.Count] = "X";
             }
+
+
+            Next();
+        }
+
+
+
+        private void GenerateBTN_Click(object sender, EventArgs e)
+        {
+            GenerateBTN.BackColor = Color.AliceBlue;
+            GenerateBTN.Text = "GENERANDO...";
+            GenerateBTN.ForeColor = Color.White;
+
+
+            writeExcel = new WriteExcel(path1, path2, Holli, RangoDedias, DiaInicial, DiaFinal, Jac, Kia, JacState, JacSaleAm, KiaState, JKiaSaleAm);
+            
+
+            
+        }
+
+
+
+        private void Initial()
+        {
+            GenerateBTN.Visible = false;
+            textBox1.Visible = false;
+            AcceptBTN.Visible = false;
+            textBox2.Visible = false;
+            Accept2BTN.Visible = false;
+            state();
+            printInScreen();
         }
 
 
         private void Next()
         {
-            // Esto ocurrre al final cuando ya se han ploteado los valores en las respectivas listas
-
-
-            #region JAC
-
-            if (index <= Jac.Count && !JacFinished)
-            {
-
-                DogLBL.Text = Jac[index];
-                CarLBL.Text = "JAC";
-
-
-                if (index == Jac.Count)
-                {
-                    JacFinished = true;
-                    // Cambiar a la pagina de kia en el excel
-                    Console.WriteLine("Se cambio a la pagina de kia");
-                    index = 0;
-                }
-            }
-
-            #endregion           
-            if (index < Kia.Count && JacFinished)
-            {
-
-                DogLBL.Text = Kia[index];
-                CarLBL.Text = "KIA";
-
-                if (index == Kia.Count - 1)
-                {
-                    // TERMINO EL PROCESO 
-
-
-                    NoBTN.Visible = false;
-                    SaleamBTN.Visible = false;
-                    XBTN.Visible = false;
-                    SalepmBTN.Visible = false;
-                    button2.Visible = false;
-
-                    GenerateBTN.Enabled = true;
-                    GenerateBTN.Visible = true;
-                }
-            }
-
-            Print();
-            CleanToNext();
+            printNote();
 
             index++;
 
+            Console.WriteLine("index = " + index );
 
-        }
-
-        private void CleanToNext()
-        {
-            ToPrintNOTE = "";
+            state();
             
-            SaleamBTN.BackColor = Color.White;
-            SalepmBTN.BackColor = Color.White;
-
-
+            printInScreen();
+            hasNote = false;
         }
 
-        private void Print()
+        private void state()
         {
-            if (!JacFinished)
-            {
-                Console.WriteLine(" JAC // " + Jac[index] + " " + JacState[index] +" "+ JacSaleAm[index] + " INDEX: =  " + index);
 
-            }else
+            if(index < Jac.Count)
             {
-                Console.WriteLine(" JAC // " + Kia[index] + " " + KiaState[index] + " " + JKiaSaleAm[index] + " "  + " INDEX: =  " + index);
+                CurrentSelection = Jac[index];
+            }
+            else
+            {
+                JacFinished = true;
+                Console.WriteLine("EMPIEZA KIA ");
+                if(index-Jac.Count < Kia.Count)
+                {
 
+                    CarLBL.Text = "KIA";
+                    CurrentSelection = Kia[index - Jac.Count];
+                }
+                else
+                {
+                    ProcessCompleted();
+                    DEBUG();
+                }
             }
         }
 
-        private void GenerateBTN_Click(object sender, EventArgs e)
+        private void printNote()
         {
-            writeExcel = new WriteExcel(path1, path2, Holli, RangoDedias, DiaInicial, DiaFinal, Jac, Kia, JacState, JacSaleAm, KiaState, JKiaSaleAm);
-            Application.Exit();
-            //writeExcel = new WriteExcel(DiaInicial, DiaFinal, RangoDedias, path2, Holli, Jac, Kia, JacState, JacSaleAm, KiaState, JKiaSaleAm);
-            // MAgia magia
-            
+            /*
+             * Hay que pensar que puede que el primero tenga nota diferente, sale am o sale pm, o ninguno
+             * 
+             * El sistema tiene que saber si se ha puesto alguna nota o no,
+             *      si -> toPrintNote = nota;
+             *      No -> toPrintNote = "";
+             */
 
-            //Application.Exit();
+            if (!hasNote)
+            {
 
-            
+                ToPrintNOTE = "";
+            }
+            else
+            {
+
+                if (index < JacSaleAm.Length)
+                {
+                    JacSaleAm[index] = ToPrintNOTE;
+                }
+                if((index +1) >= JacSaleAm.Length)
+                {
+                    JKiaSaleAm[(index + 1) - JacSaleAm.Length] = ToPrintNOTE;
+                }
+
+
+
+                hasNote = false;
+                ToPrintNOTE = "";
+            }
+
+
+
+
+
+
+
+            SaleamBTN.BackColor = Color.White;
+            SalepmBTN.BackColor = Color.White;
+
+        }
+
+
+        private void ProcessCompleted()
+        {
+            GenerateBTN.Visible = true;
+            SaleamBTN.Visible = false;
+            SalepmBTN.Visible = false;
+            XBTN.Visible = false;
+            NoBTN.Visible = false;
+            button2.Visible = false;
+            Accept2BTN.Visible = false;
+            AcceptBTN.Visible = false;
+            EstadoDiferenteBTN.Visible = false;
+            NotaDiferenteBTN.Visible = false;
+            DogLBL.Visible = false;
+            CarLBL.Visible = false;
+            Console.WriteLine("Proceso Completado ");
+        }
+
+
+        private void printInScreen()
+        {
+            DogLBL.Text = CurrentSelection;
+        }
+
+
+
+
+
+        private void DEBUG()
+        {
+            foreach(string nota in JacSaleAm)
+            {
+                Console.WriteLine(nota);
+            }
+
+            for (int i = 0; i<Jac.Count; i++)
+            {
+                Console.WriteLine("Jac = " + Jac[i] + " Estado == " + JacState[i] + " || NOTA =  " + JacSaleAm[i]);
+            }
+            for(int i = 0; i<Kia.Count; i++)
+            {
+                Console.WriteLine("Kia = " + Kia[i] + " Estado == " + KiaState[i] + " || NOTA =  " + JKiaSaleAm[i]);
+
+            }
         }
     }
 }

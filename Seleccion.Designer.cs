@@ -36,7 +36,7 @@
             this.SaleamBTN = new System.Windows.Forms.Button();
             this.SalepmBTN = new System.Windows.Forms.Button();
             this.GenerateBTN = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.NotaDiferenteBTN = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.AcceptBTN = new System.Windows.Forms.Button();
             this.EstadoDiferenteBTN = new System.Windows.Forms.Button();
@@ -124,23 +124,25 @@
             // GenerateBTN
             // 
             this.GenerateBTN.Font = new System.Drawing.Font("Showcard Gothic", 15.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GenerateBTN.ForeColor = System.Drawing.SystemColors.MenuText;
             this.GenerateBTN.Location = new System.Drawing.Point(267, 198);
             this.GenerateBTN.Name = "GenerateBTN";
             this.GenerateBTN.Size = new System.Drawing.Size(251, 122);
             this.GenerateBTN.TabIndex = 3;
             this.GenerateBTN.Text = "GENERAR EXCEL";
             this.GenerateBTN.UseVisualStyleBackColor = true;
+            this.GenerateBTN.Visible = false;
             this.GenerateBTN.Click += new System.EventHandler(this.GenerateBTN_Click);
             // 
-            // button1
+            // NotaDiferenteBTN
             // 
-            this.button1.Location = new System.Drawing.Point(541, 306);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(150, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "NOTA DIFERENTE";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.NotaDiferenteBTN.Location = new System.Drawing.Point(541, 306);
+            this.NotaDiferenteBTN.Name = "NotaDiferenteBTN";
+            this.NotaDiferenteBTN.Size = new System.Drawing.Size(150, 23);
+            this.NotaDiferenteBTN.TabIndex = 4;
+            this.NotaDiferenteBTN.Text = "NOTA DIFERENTE";
+            this.NotaDiferenteBTN.UseVisualStyleBackColor = true;
+            this.NotaDiferenteBTN.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox1
             // 
@@ -197,7 +199,7 @@
             this.Controls.Add(this.EstadoDiferenteBTN);
             this.Controls.Add(this.AcceptBTN);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.NotaDiferenteBTN);
             this.Controls.Add(this.GenerateBTN);
             this.Controls.Add(this.SalepmBTN);
             this.Controls.Add(this.SaleamBTN);
@@ -224,7 +226,7 @@
         private System.Windows.Forms.Button SaleamBTN;
         private System.Windows.Forms.Button SalepmBTN;
         private System.Windows.Forms.Button GenerateBTN;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button NotaDiferenteBTN;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button AcceptBTN;
         private System.Windows.Forms.Button EstadoDiferenteBTN;

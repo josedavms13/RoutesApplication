@@ -36,12 +36,28 @@ namespace RUTAS_TEST2
         public Form1()
         {
             InitializeComponent();
+            
 
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            _Bienvenida();
+            if(!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "AppData.txt"))
+            {
+                _Bienvenida();
+            }
+            else
+            {
+                StreamReader appFile = new StreamReader(AppDomain.CurrentDomain.BaseDirectory + "AppData.txt");
+                Path1 = appFile.ReadLine();
+                Console.WriteLine("Path1 = " + Path1);
+                Path2 = appFile.ReadLine();
+                Console.WriteLine("Path2 = " + Path2);
+
+                appFile.Close();
+            }
+
+            
             if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "RUTAS DICIEMBRE 2019.xlsx"))
             {
                 File.Copy(Path1, AppDomain.CurrentDomain.BaseDirectory + "RUTAS DICIEMBRE 2019.xlsx");
@@ -53,6 +69,8 @@ namespace RUTAS_TEST2
             }
 
             rutasInfo = new RutasInfo();
+
+
             //if (isTheFirstTime)
             //{
             //    bienvenida = new Bienvenida();
@@ -191,12 +209,16 @@ namespace RUTAS_TEST2
                 DateSelectedLBL.Text = Rangodefechas;
             }
 
-        }
+        }  // CALENDARIO
 
         #endregion
         private void button7_Click(object sender, EventArgs e)
         {
             Console.WriteLine("se abre el menu");
+            Reset reset = new Reset();
+            reset.ShowDialog();
+
+
         }
 
         private void StartBTN_Click(object sender, EventArgs e)
@@ -222,10 +244,15 @@ namespace RUTAS_TEST2
             {
                 if(bienvenida.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
+                    StreamWriter appData = new StreamWriter(AppDomain.CurrentDomain.BaseDirectory + "AppData.txt");
                     Path1 = bienvenida.path1;
                     Path2 = bienvenida.path2;
                     Console.WriteLine( "Path in FORM1 =  " + Path1);
                     Console.WriteLine("Path 2 in FORM1 =  " + Path2);
+
+                    appData.WriteLine(Path1);
+                    appData.WriteLine(Path2);
+                    appData.Close();
                 }
             }
         }
